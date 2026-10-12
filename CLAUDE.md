@@ -20,8 +20,12 @@ persistence → Streamlit inference app.
   **worst** (mean of the three largest values).
 - Many features are highly correlated (radius/perimeter/area especially) — relevant for linear models and
   feature importance interpretation.
-- Load with `ucimlrepo` (`fetch_ucirepo(id=17)`). `sklearn.datasets.load_breast_cancer` is the same data and
-  works offline — use it in tests so they never hit the network.
+- Raw files live in `data/raw/` (`wdbc.data`, headerless CSV, and `wdbc.names`), downloaded from the UCI
+  static zip. Column names are assigned in code from `config.FEATURES` (snake_case, e.g. `radius_mean`,
+  `concave_points_worst`). 13 rows have legitimate `0` concavity values — not missing, never impute.
+- `sklearn.datasets.load_breast_cancer` is the same data and works offline — use it in tests so they never hit
+  the network, but note its target is inverted (0 = malignant); remap to our convention.
+- `PLAN.md` holds the sequential feature plan (F0–F17); follow it in order and tick items off as completed.
 
 ## Conventions for the ML work
 
@@ -80,7 +84,7 @@ tests/
 ```
 
 Add `data/`, `models/*.joblib` and notebook checkpoints to `.gitignore`. Add runtime deps
-(`scikit-learn`, `pandas`, `ucimlrepo`, `joblib`, `streamlit`, plotting libs) with `uv add`; dev-only tools
+(`scikit-learn`, `pandas`, `pyarrow`, `joblib`, `streamlit`, plotting libs) with `uv add`; dev-only tools
 with `uv add --group <group>`.
 
 ## Commands
